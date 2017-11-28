@@ -50,7 +50,7 @@ create table constituida (
     constraint pk_constituida primary key (super_categoria, categoria)
 );
 
--- Fornecedor Primario
+-- Fornecedor
 create table fornecedor (
     nif numeric(9,0) not null unique,
     nome varchar(15),
