@@ -48,19 +48,24 @@
                         <th>Categoria</th>
                         <th>Fornecedor</th>
                         <th>Remove</th>
+                        <th>Update</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <?php foreach($produto as $row) {
                     $delete = "removeProduct.php?ean={$row['ean']}";
+                    echo("<form action='changeProductDesignation.php' method='post'>");
+                    echo("<input type='hidden' name='ean' value={$row['ean']}/></td>");
                     echo("<tr>");
                         echo("<td> {$row['ean']} </td>");
-                        echo("<td> {$row['design']} </td>");
+                        echo("<td> <input type='text' name='design' placeholder={$row['design']} /></td>");
                         echo("<td> {$row['categoria']} </td>");
                         echo("<td> {$row['fornecedor']} </td>");
-                        echo("<td><a href='$delete'>Remove</a></td>");      
-                    echo("</tr>");                        
+                        echo("<td><a href='$delete'>Remove</a></td>");
+                        echo("<td><input type='submit' value='Update'/></td>");                           
+                    echo("</tr>");
+                    echo("</form>");               
                     } ?>
                     <tr>
                 </tbody>
