@@ -340,6 +340,34 @@
 					</table>
 				</div>
 
+				<div class="col-sm">
+					<!-- Produto -->
+					<h3>Produto</h3>
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>EAN</th>
+								<th>Designacao</th>
+								<th>Categoria</th>
+								<th>Fornecedor</th>
+								<th>Instante</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<?php foreach($produto as $row) {
+							echo("<tr>");
+								echo("<td> {$row['ean']} </td>");
+								echo("<td> {$row['design']} </td>");
+								echo("<td> {$row['categoria']} </td>");
+								echo("<td> {$row['fornecedor']} </td>");
+								echo("<td> {$row['instante']} </td>");			
+							echo("</tr>");
+							} ?>
+						</tbody>
+					</table>
+				</div>
+
 			</div>
 
 		</div>
