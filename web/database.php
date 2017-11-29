@@ -1,57 +1,57 @@
 <?php
-    try {
+	try {
 
 		/* Database Connection */
-        $host = "db.ist.utl.pt";
-        $user = "ist426011";
-        $password = "gfso9907";
-        $dbname = $user;
+		$host = "db.ist.utl.pt";
+		$user = "ist426011";
+		$password = "gfso9907";
+		$dbname = $user;
 
-        $db = new PDO("pgsql:host=$host;dbname=$dbname", $user, $password);
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$db = new PDO("pgsql:host=$host;dbname=$dbname", $user, $password);
+		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-   		/* SQL Queries */
-        $categoria_sql = "SELECT nome FROM categoria;";
-        $categoria = $db->query($categoria_sql);
+		/* SQL Queries */
+		$categoria_sql = "SELECT nome FROM categoria;";
+		$categoria = $db->query($categoria_sql);
 
-        $categoria_simples_sql = "SELECT nome FROM categoria_simples;";
-        $categoria_simples = $db->query($categoria_simples_sql);
+		$categoria_simples_sql = "SELECT nome FROM categoria_simples;";
+		$categoria_simples = $db->query($categoria_simples_sql);
 
-        $super_categoria_sql = "SELECT nome FROM super_categoria;";
-        $super_categoria = $db->query($super_categoria_sql);
+		$super_categoria_sql = "SELECT nome FROM super_categoria;";
+		$super_categoria = $db->query($super_categoria_sql);
 
-        $constituida_sql = "SELECT super_categoria, categoria FROM constituida;";
-        $constituida = $db->query($constituida_sql);
+		$constituida_sql = "SELECT super_categoria, categoria FROM constituida;";
+		$constituida = $db->query($constituida_sql);
 
-        $fornecedor_sql = "SELECT nif, nome FROM fornecedor;";
-        $fornecedor = $db->query($fornecedor_sql);
+		$fornecedor_sql = "SELECT nif, nome FROM fornecedor;";
+		$fornecedor = $db->query($fornecedor_sql);
 
-        $produto_sql = "SELECT ean, design, categoria, fornecedor, instante FROM produto;";
-        $produto = $db->query($produto_sql);
+		$produto_sql = "SELECT ean, design, categoria, fornecedor, instante FROM produto;";
+		$produto = $db->query($produto_sql);
 
-        $fornece_sec_sql = "SELECT nif, ean FROM fornece_sec;";
-        $fornece_sec = $db->query($fornece_sec_sql);
+		$fornece_sec_sql = "SELECT nif, ean FROM fornece_sec;";
+		$fornece_sec = $db->query($fornece_sec_sql);
 
-        $corredor_sql = "SELECT nro, largura FROM corredor;";
-        $corredor = $db->query($corredor_sql);
+		$corredor_sql = "SELECT nro, largura FROM corredor;";
+		$corredor = $db->query($corredor_sql);
 
-        $prateleira_sql = "SELECT nro, lado, altura FROM prateleira;";
-        $prateleira = $db->query($prateleira_sql);
+		$prateleira_sql = "SELECT nro, lado, altura FROM prateleira;";
+		$prateleira = $db->query($prateleira_sql);
 
-        $planograma_sql = "SELECT ean, nro, lado, altura, face, unidades, loc FROM planograma;";
-        $planograma = $db->query($planograma_sql);
+		$planograma_sql = "SELECT ean, nro, lado, altura, face, unidades, loc FROM planograma;";
+		$planograma = $db->query($planograma_sql);
 
-        $evento_reposicao_sql = "SELECT operador, instante FROM evento_reposicao;";
-        $evento_reposicao = $db->query($evento_reposicao_sql);
+		$evento_reposicao_sql = "SELECT operador, instante FROM evento_reposicao;";
+		$evento_reposicao = $db->query($evento_reposicao_sql);
 
-        $reposicao_sql = "SELECT ean, nro, lado, altura, operador, instante, unidades FROM reposicao;";
-        $reposicao = $db->query($reposicao_sql);
+		$reposicao_sql = "SELECT ean, nro, lado, altura, operador, instante, unidades FROM reposicao;";
+		$reposicao = $db->query($reposicao_sql);
 
 		$db = null;
 
-    } catch (PDOException $e) {
-    	echo("<p>ERROR: {$e->getMessage()}</p>");
-    }
+	} catch (PDOException $e) {
+		echo("<p>ERROR: {$e->getMessage()}</p>");
+	}
 ?>
 
 <!doctype html>
@@ -65,7 +65,7 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 	</head>
 	
-    <body>
+	<body>
 		<div class="container">
 
 			<div class="row">
@@ -371,5 +371,5 @@
 			</div>
 
 		</div>
-    </body>
+	</body>
 </html>
