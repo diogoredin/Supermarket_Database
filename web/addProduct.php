@@ -25,7 +25,6 @@
 		$nif_sec = (int)$_REQUEST['nif_sec'];
 		$nome_sec = (string)$_REQUEST['nome_sec'];
 
-		echo($nif);
 		/* SQL Queries */
 		$db->query("start transaction;");
 

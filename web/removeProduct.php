@@ -26,7 +26,7 @@
 		$fornece_sec = $db->query($fornece_sec_sql);
 
 		$produto_sql = "DELETE FROM produto WHERE ean = $ean;";
-		$produto = $db->query($produto_sql);            
+		$produto = $db->query($produto_sql);
 
 		$db->query("commit;");
 
