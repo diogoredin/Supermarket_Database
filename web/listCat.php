@@ -10,31 +10,28 @@
 		$db = new PDO("pgsql:host=$host;dbname=$dbname", $user, $password);
 		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-		/* Product to remove */
-		$ean = $_REQUEST['ean'];
+		/* Product to add */
+		$parentCat = (string)$_REQUEST['cat'];
 
 		/* SQL Queries */
 		$db->query("start transaction;");
 
-		$reposicao_sql = "DELETE FROM reposicao WHERE ean = $ean;";
-		$resposicao = $db->query($reposicao_sql);
+		
+		$sql = "SELECT categoria FROM constituida WHERE super_categoria = '$parentCat';";
+		$scats = $db->query($sql)->fetchAll();
 
-		$planograma_sql = "DELETE FROM planograma WHERE ean = $ean;";
-		$planograma = $db->query($planograma_sql);
-
-		$fornece_sec_sql = "DELETE FROM fornece_sec WHERE ean = $ean;";
-		$fornece_sec = $db->query($fornece_sec_sql);
-
-		$produto_sql = "DELETE FROM produto WHERE ean = $ean;";
-		$produto = $db->query($produto_sql);            
-
+		foreach($scats as $cat) {
+			echo("<p>{$cat['categoria']}</p>");
+			$sql = "SELECT categoria FROM constituida WHERE super_categoria = '$cat';";
+			$scats = array_merge($scats, $db->query($sql)->fetchAll());
+		}
+		
 		$db->query("commit;");
 
 		/* Reset Connection */
 		$db = null;
 
 		/* Redirects to previous page */
-		header('Location: products.php'); exit();
 
 	} catch (PDOException $e) {
 		$db->query("rollback;");
