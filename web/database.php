@@ -122,8 +122,9 @@
 
 						<tbody>
 							<?php foreach($super_categoria as $row) {
+							$listCat = "listCat.php?cat={$row['nome']}";
 							echo("<tr>");
-								echo("<td> {$row['nome']} </td>");
+								echo("<td> {$row['nome']} <a href='$listCat'>List sub-categories</a></td>");
 							echo("</tr>");
 							} ?>
 						</tbody>
