@@ -63,7 +63,7 @@
 						echo("<td> {$row['categoria']} </td>");
 						echo("<td> {$row['fornecedor']} </td>");
 						echo("<td><a href='$delete'>Remove</a></td>");
-						echo("<td><input type='submit' value='Update'/></td>");                           
+						echo("<td><input type='submit' value='Update'/></td>");
 					echo("</tr>");
 					echo("</form>");               
 					} ?>
