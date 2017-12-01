@@ -105,22 +105,40 @@
 					</table>
 				</div>
 			</div>
-		
-			<!-- Adicionar Categoria -->
-			<h3>Adicionar Categoria</h3>
-			<form action="addCategory.php" method="post">
-				<p>Nome : <input type="text" name="nome"/></p>
-				<p>
-					<select name="supernome">
-						<?php echo(count($categoria));
-						foreach($categoria as $row) {
-							$cat = $row['nome'];
-							echo("<option value='$cat'>$cat</option>");
-						} ?>
-					</select>
-				</p>
-				<p><input type="submit" value="Submit" /></p>
-			</form>
+			<div class="row">
+				<div class="col-sm">
+					<!-- Adicionar Categoria -->
+					<h3>Adicionar Categoria</h3>
+					<form action="addCategory.php" method="post">
+						<p>Nome : <input type="text" name="nome"/></p>
+						<p>Super Categoria : <select name="supernome">
+								<?php 
+									echo("<option value='(Nenhuma)'>(Nenhuma)</option>");
+									foreach($categoria as $row) {
+									$cat = $row['nome'];
+									echo("<option value='$cat'>$cat</option>");
+								} ?>
+							</select>
+						</p>
+						<p><input type="submit" value="Submit" /></p>
+					</form>
+				</div>
+				<div class="col-sm">
+					<!-- Remover Categoria -->
+					<h3>Remover Categoria</h3>
+					<form action="removeCategory.php" method="post">
+						<p>Categoria : <select name="nome">
+								<?php 
+									foreach($categoria as $row) {
+									$cat = $row['nome'];
+									echo("<option value='$cat'>$cat</option>");
+								} ?>
+							</select>
+						</p>
+						<p><input type="submit" value="Submit" /></p>
+					</form>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>						

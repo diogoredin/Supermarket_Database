@@ -25,19 +25,21 @@
 		$categoria_simples_sql = "INSERT INTO categoria_simples VALUES ('$nome');";
 		$categoria_simples = $db->query($categoria_simples_sql);
 		
-		$categoria_simples_sql = "DELETE FROM categoria_simples WHERE nome = '$supernome';";
-		$categoria_simples = $db->query($categoria_simples_sql);
+		if ($supernome != "(Nenhuma)") {
+			$categoria_simples_sql = "DELETE FROM categoria_simples WHERE nome = '$supernome';";
+			$categoria_simples = $db->query($categoria_simples_sql);
+
+			$super_categoria_count_sql = "SELECT 'nome' FROM super_categoria WHERE nome = '$supernome';";
+			$super_categoria_count = $db->query($super_categoria_count_sql);
 		
-		$super_categoria_count_sql = "SELECT 'nome' FROM super_categoria WHERE nome = '$supernome';";
-		$super_categoria_count = $db->query($super_categoria_count_sql);
+			if (count($super_categoria_count->fetchAll()) == 0) {
+				$super_categoria_sql = "INSERT INTO super_categoria VALUES ('$supernome');";
+				$super_categoria = $db->query($super_categoria_sql);
+			}
 		
-		if (count($super_categoria_count->fetchAll()) == 0) {
-			$super_categoria_sql = "INSERT INTO super_categoria VALUES ('$supernome');";
-			$super_categoria = $db->query($super_categoria_sql);
+			$constituida_sql = "INSERT INTO constituida VALUES ('$supernome','$nome');";
+			$constituida = $db->query($constituida_sql);
 		}
-		
-		$constituida_sql = "INSERT INTO constituida VALUES ('$supernome','$nome');";
-		$constituida = $db->query($constituida_sql);
 
 		$db->query("commit;");
 
