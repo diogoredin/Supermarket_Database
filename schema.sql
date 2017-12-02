@@ -35,15 +35,47 @@ create table super_categoria (
 	constraint pk_super_categoria primary key (nome)
 );
 
+-- Nome de uma categoria tem de existir em categoria_simples ou super_categoria mas nao nas duas
+create assertion categoria_definida check (
+	not exists ( 
+		select *
+		from categoria cat
+		where (  
+			( cat.nome not in (select nome from categoria_simples) and cat.nome not in (select nome from super_categoria) )
+			or 
+			( cat.nome in (select nome from categoria_simples) and cat.nome in (select nome from super_categoria) ) 
+		)
+	)
+);
+
 -- Constituida
 create table constituida (
 	super_categoria varchar(15) not null,
 	categoria varchar(15) not null,
 	unique (super_categoria, categoria),
-	constraint categoria_ciclica check (super_categoria != categoria),
+	constraint categoria_inception check (super_categoria != categoria),
 	constraint fk_super_categoria foreign key (super_categoria) references super_categoria(nome),
 	constraint fk_categoria foreign key (categoria) references categoria(nome),
 	constraint pk_constituida primary key (super_categoria, categoria)
+);
+
+-- Nao podem existir ciclos super_categoria com categoria
+create assertion categoria_ciclica check (
+	not exists ( 
+		select *
+		from constituida const
+		where ( const.super_categoria in (select categoria from constituida) 
+				or const.categoria in (select super_categoria from constituida) )
+	)
+);
+
+-- Uma super-categoria tem que estar presente na relacao constituida
+create assertion constituida_super_categoria check (
+	not exists ( 
+		select *
+		from super_categoria super
+		where ( super.nome not in (select super_categoria from constituida) ) 
+	)
 );
 
 -- Fornecedor
@@ -55,7 +87,7 @@ create table fornecedor (
 
 -- Produto
 create table produto (
-	ean numeric(13,0) not null unique,
+	ean numeric(20,0) not null unique,
 	design varchar(50) not null,
 	categoria varchar(15) not null,
 	fornecedor numeric(9,0) not null,
@@ -67,11 +99,29 @@ create table produto (
 
 -- Fornecedor Secundario
 create table fornece_sec (
-	nif numeric(9,0) not null unique,
-	ean numeric(13,0) not null,
+	nif numeric(9,0) not null,
+	ean numeric(20,0) not null unique,
 	constraint fk_fornecedor foreign key (nif) references fornecedor(nif),
 	constraint fk_produto foreign key (ean) references produto(ean),
 	constraint pk_fornece_sec primary key (nif, ean)
+);
+
+-- Todo os produtos tem de ter fornecedor secundario
+create assertion produto_fornece_sec check (
+	not exists ( 
+		select *
+		from produto pro
+		where ( pro.ean not in (select ean from fornece_sec) ) 
+	)
+);
+
+-- O fornecedor primario de um produto nao pode existir na relacao fornece_sec para o mesmo produto
+create assertion produto_fornece_sec check (
+	not exists ( 
+		select *
+		from produto pro
+		where ( pro.fornecedor in (select nif from fornece_sec) )
+	)
 );
 
 -- Corredor
@@ -93,7 +143,7 @@ create table prateleira (
 
 -- Planograma
 create table planograma (
-	ean numeric(13,0) not null unique,
+	ean numeric(20,0) not null unique,
 	nro numeric(4,0) not null,
 	lado varchar(1) not null,
 	altura numeric(3,0) not null,
@@ -110,12 +160,13 @@ create table evento_reposicao (
 	operador varchar(15) not null,
 	instante timestamp not null,
 	unique (operador, instante),
+	constraint categoria_inception check (instante <= now()),
 	constraint pk_evento_reposicao primary key (operador, instante)
 );
 
 -- Reposicao
 create table reposicao (
-	ean numeric(13,0) not null,
+	ean numeric(20,0) not null,
 	nro numeric(4,0) not null,
 	lado char(1) not null,
 	altura numeric(3,0) not null,
