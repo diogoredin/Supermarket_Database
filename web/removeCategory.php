@@ -10,15 +10,17 @@
 		$db = new PDO("pgsql:host=$host;dbname=$dbname", $user, $password);
 		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-		/* Product to remove */
+		/* Category to remove */
 		$nome = $_REQUEST['nome'];
 
 		/* SQL Queries */
 		$db->query("start transaction;");
+		
+		
 		$check_supercategoria_sql = "SELECT super_categoria FROM constituida WHERE categoria = '$nome';";
 		$check_supercategoria = $db->query($check_supercategoria_sql)->fetchAll();
 		
-		
+		// Checks if the category is a sub-category
 		if (count($check_supercategoria) != 0) {
 			$supercategoria_nome = $check_supercategoria[0][super_categoria];
 			
@@ -35,7 +37,7 @@
 		$super_categoria_sql = "DELETE FROM super_categoria WHERE nome = '$nome';";
 		$super_categoria = $db->query($super_categoria_sql)->fetchAll();
 		
-		
+		// If the removed category is a sub-category, and its super-category no longer has sub-categories, it becomes a simple category.
 		if (count($check_constituida) == 1) {
 			$rem_super_categoria_sql = "DELETE FROM super_categoria WHERE nome = '$supercategoria_nome';";
 			$rem_super_categoria = $db->query($rem_super_categoria_sql);
@@ -48,7 +50,6 @@
 		$categoria = $db->query($categoria_sql);
 
 		
-
 		$db->query("commit;");
 
 		/* Reset Connection */

@@ -12,7 +12,7 @@
 
 		/* SQL Queries */
 		$produto_sql = "SELECT ean, design, categoria, fornecedor, instante FROM produto;";
-		$produto = $db->query($produto_sql);
+		$produto = $db->query($produto_sql)->fetchAll();
 
 		$categoria_sql = "SELECT nome FROM categoria;";
 		$categoria = $db->query($categoria_sql);
@@ -39,57 +39,80 @@
 		<div class="container">
 
 			<!-- Produto -->
-			<h3>Produto</h3>
-			<table class="table table-bordered">
-				<thead>
-					<tr>
-						<th>EAN</th>
-						<th>Designacao</th>
-						<th>Categoria</th>
-						<th>Fornecedor</th>
-						<th>Remove</th>
-						<th>Update</th>
-					</tr>
-				</thead>
+			<div class="row">
+				<div class="col-sm">
+					<h3>Produto</h3>
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th>EAN</th>
+								<th>Designacao</th>
+								<th>Categoria</th>
+								<th>Fornecedor</th>
+								<th>Remove</th>
+								<th>Update</th>
+							</tr>
+						</thead>
 
-				<tbody>
-					<?php foreach($produto as $row) {
-					$delete = "removeProduct.php?ean={$row['ean']}";
-					echo("<form action='changeProductDesignation.php' method='post'>");
-					echo("<input type='hidden' name='ean' value={$row['ean']}/></td>");
-					echo("<tr>");
-						echo("<td> {$row['ean']} </td>");
-						echo("<td> <input type='text' name='design' placeholder={$row['design']} /></td>");
-						echo("<td> {$row['categoria']} </td>");
-						echo("<td> {$row['fornecedor']} </td>");
-						echo("<td><a href='$delete'>Remove</a></td>");
-						echo("<td><input type='submit' value='Update'/></td>");
-					echo("</tr>");
-					echo("</form>");               
-					} ?>
-					<tr>
-				</tbody>
-			</table>
+						<tbody>
+							<?php foreach($produto as $row) {
+							$delete = "removeProduct.php?ean={$row['ean']}";
+							echo("<form action='changeProductDesignation.php' method='post'>");
+							echo("<input type='hidden' name='ean' value={$row['ean']}/></td>");
+							echo("<tr>");
+								echo("<td> {$row['ean']} </td>");
+								echo("<td> <input type='text' name='design' placeholder={$row['design']} /></td>");
+								echo("<td> {$row['categoria']} </td>");
+								echo("<td> {$row['fornecedor']} </td>");
+								echo("<td><a href='$delete'>Remove</a></td>");
+								echo("<td><input type='submit' value='Update'/></td>");
+							echo("</tr>");
+							echo("</form>");               
+							} ?>
+							<tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 			
 			<!-- Produto -->
-			<h3>Adicionar Produto</h3>
-			<form action="addProduct.php" method="post">
-				<p>EAN (numero 13 digitos): <input type="text" name="ean"/></p>
-				<p>Designacao: <input type="text" name="design" /></p>
-				<p>
-					<select name="categoria">
-						<?php foreach($categoria as $row) {
-							$cat = $row['nome'];
-							echo("<option value='$cat'>$cat</option>");
-						} ?>
-					</select>
-				</p>
-				<p>NIF Fornecedor Primario: <input type="text" name="nif" /></p>
-				<p>Nome Fornecedor Primario: <input type="text" name="nome" /></p>
-				<p>NIF Fornecedor Secundario: <input type="text" name="nif_sec" /></p>
-				<p>Nome Fornecedor Secundario: <input type="text" name="nome_sec" /></p>
-				<p><input type="submit" value="Submit" /></p>
-			</form>
+			<div class="row">
+				<div class="col-sm">
+					<h3>Adicionar Produto</h3>
+					<form action="addProduct.php" method="post">
+						<p>EAN (numero 13 digitos): <input type="text" name="ean"/></p>
+						<p>Designacao: <input type="text" name="design" /></p>
+						<p>Categoria : <select name="categoria">
+								<?php 
+									foreach($categoria as $row) {
+									$cat = $row['nome'];
+									echo("<option value='$cat'>$cat</option>");
+								} ?>
+							</select>
+						</p>
+						<p>NIF Fornecedor Primario: <input type="text" name="nif" /></p>
+						<p>Nome Fornecedor Primario: <input type="text" name="nome" /></p>
+						<p>NIF Fornecedor Secundario: <input type="text" name="nif_sec" /></p>
+						<p>Nome Fornecedor Secundario: <input type="text" name="nome_sec" /></p>
+						<p><input type="submit" value="Submit" /></p>
+					</form>
+				</div>
+				<div class="col-sm">
+					<h3>Listar Reposicoes</h3>
+					<form action="listRestock.php" method="post">
+						<p>Produto : <select name="ean">
+								<?php 
+									foreach($produto as $row) {
+									$design = $row['design'];
+									$num = $row['ean'];
+									echo("<option value=$num>$num - $design</option>");
+								} ?>
+							</select>
+						</p>
+						<p><input type="submit" value="Submit" /></p>
+					</form>
+				</div>
+			</div>
 		</div>
 	</body>
 

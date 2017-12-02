@@ -10,20 +10,14 @@
 		$db = new PDO("pgsql:host=$host;dbname=$dbname", $user, $password);
 		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-		/* Product to add */
-		$parentCat = (string)$_REQUEST['cat'];
+		/* Product to list */
+		$ean = $_REQUEST['ean'];
 
 		/* SQL Queries */
 		$db->query("start transaction;");
-
 		
-		$sql = "SELECT categoria FROM constituida WHERE super_categoria = '$parentCat';";
-		$scats = $db->query($sql)->fetchAll();
-
-		foreach($scats as $cat) {
-			$sql = "SELECT categoria FROM constituida WHERE super_categoria = '$cat';";
-			$scats = array_merge($scats, $db->query($sql)->fetchAll());
-		}
+		$reposicao_sql = "SELECT nro, lado, altura, operador, instante, unidades FROM reposicao WHERE ean = $ean ORDER BY instante;";
+		$reposicao = $db->query($reposicao_sql)->fetchAll();		
 		
 		$db->query("commit;");
 
@@ -34,6 +28,7 @@
 		$db->query("rollback;");
 		echo("<p>ERROR: {$e->getMessage()}</p>");
 	}
+	
 ?>
 
 <!doctype html>
@@ -50,19 +45,29 @@
 	<body>
 		<div class="container">
 
-			<!-- Category -->
-			<?php echo("<h3>Sub Categories of {$parentCat}</h3>"); ?>
+			<!-- Product -->
+			<?php echo("<h3>Eventos de Reposicao do produto {$ean}</h3>"); ?>
 			<table class="table table-bordered">
 				<thead>
 					<tr>
-						<th>Sub Categories</th>
+						<th>Numero</th>
+						<th>Lado</th>
+						<th>Altura</th>
+						<th>Operador</th>
+						<th>Instante</th>
+						<th>Unidades</th>
 					</tr>
 				</thead>
 
 				<tbody>
-					<?php foreach($scats as $cat) {
+					<?php foreach($reposicao as $row) {
 					echo("<tr>");
-						echo("<td> {$cat['categoria']} </td>");                         
+						echo("<td> {$row['nro']} </td>");
+						echo("<td> {$row['lado']} </td>");
+						echo("<td> {$row['altura']} </td>"); 
+						echo("<td> {$row['operador']} </td>");
+						echo("<td> {$row['instante']} </td>");  
+						echo("<td> {$row['unidades']} </td>");                        
 					echo("</tr>");             
 					} ?>
 					<tr>
