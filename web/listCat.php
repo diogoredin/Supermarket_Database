@@ -23,6 +23,8 @@
 		foreach($scats as $cat) {
 			$sql = "SELECT categoria FROM constituida WHERE super_categoria = '$cat';";
 			$scats = array_merge($scats, $db->query($sql)->fetchAll());
+			echo($db->query($sql)->fetchAll());
+			echo($scats);
 		}
 		
 		$db->query("commit;");
