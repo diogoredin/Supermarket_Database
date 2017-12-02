@@ -2,7 +2,19 @@
 -- Queries
 ----------------------------------------
 -- a)
-
+SELECT nome
+FROM
+    (SELECT DISTINCT categoria, fornecedor as nif FROM produto
+            UNION
+    SELECT DISTINCT categoria, nif FROM fornece_sec NATURAL JOIN produto) as cats NATURAL JOIN fornecedor
+GROUP BY nif, nome
+HAVING count(categoria) >= ALL(
+    SELECT count(categoria)
+    FROM
+        (SELECT DISTINCT categoria, fornecedor as nif FROM produto
+                UNION
+        SELECT DISTINCT categoria, nif FROM fornece_sec NATURAL JOIN produto) as cats
+    GROUP BY nif);
 
 -- b)
 SELECT f.nome, f.nif
