@@ -1,1 +1,1 @@
-# [University Project] Supermarket Database Implementation.
+# Supermarket Database Implementation.
