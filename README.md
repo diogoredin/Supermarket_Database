@@ -1,1 +1,1 @@
-# BD Project
+# [University Project] Supermarket Database Implementation.
