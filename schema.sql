@@ -1,3 +1,12 @@
+----------------------------------------
+-- Eliminacao das Tabelas
+----------------------------------------
+
+-- STAR SCHEMA
+drop table fact_table;
+drop table d_produto;
+drop table d_tempo;
+
 drop table reposicao;
 drop table evento_reposicao;
 drop table planograma;
@@ -178,3 +187,44 @@ create table reposicao (
 	constraint fk_evento_reposicao foreign key (operador, instante) references evento_reposicao(operador, instante),
 	constraint pk_reposicao primary key (ean, nro, lado, altura, operador, instante)
 );
+
+-- STAR SCHEMA
+CREATE TABLE d_produto(
+    cean numeric(20,0) not null unique,
+    categoria varchar(15) not null,
+    nif_fornecedor_principal numeric(9,0) not null,
+    constraint fk_categoria foreign key (categoria) references categoria(nome),
+	constraint fk_fornecedor foreign key (nif_fornecedor_principal) references fornecedor(nif),
+	constraint pk_d_produto primary key (cean)
+);
+
+CREATE TABLE d_tempo(
+    dia numeric(2,0) not null,
+    mes numeric(2,0) not null,
+    ano numeric(4,0) not null,
+    constraint pk_d_tempo primary key (dia, mes, ano)
+);
+
+CREATE TABLE fact_table(
+    cean numeric(20,0) not null,
+    dia numeric(2,0) not null,
+    mes numeric(2,0) not null,
+    ano numeric (4,0) not null,
+    unidades numeric(4,0) not null,
+    constraint fk_cean foreign key (cean) references d_produto(cean),
+    constraint pk_fact_table primary key (cean, dia, mes, ano)
+);
+
+
+-- 
+CREATE FUNCTION fornecedor_ciclico() RETURNS TRIGGER AS
+    $$
+    begin
+        IF ( EXISTS ( SELECT * FROM produto pro WHERE ( pro.fornecedor = new.nif AND pro.ean = new.ean ) ) ) THEN
+            RAISE EXCEPTION 'Fornecedor secundario % introduzido para o produto % ja e primario para o mesmo.', new.nif, new.ean;
+        END IF;
+    RETURN new;
+    END
+    $$ language plpgsql;
+
+CREATE TRIGGER fornecedor_ciclico AFTER INSERT ON fornece_sec FOR EACH ROW EXECUTE PROCEDURE fornecedor_ciclico();

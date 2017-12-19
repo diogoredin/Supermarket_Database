@@ -247,3 +247,20 @@ insert into reposicao values (1214567891234, 6, 'd', 10, 'Hugo', '2017-11-28 18:
 insert into reposicao values (8634567891234, 7, 'd', 10, 'Mariana', '2017-11-28 09:11:00', 4);
 insert into reposicao values (1234547891234, 8, 'd', 10, 'Susana', '2017-11-28 10:10:00', 4);
 insert into reposicao values (3234561891234, 9, 'd', 10, 'Francisco', '2017-11-28 16:05:00', 4);
+
+-- STAR SCHEMA
+INSERT INTO d_produto
+SELECT ean, categoria, fornecedor
+FROM produto;
+
+INSERT INTO d_tempo
+SELECT DISTINCT extract(day FROM instante), extract(month FROM instante), extract(year FROM instante)
+FROM evento_reposicao;
+
+INSERT INTO fact_table
+SELECT cean, dia, mes, ano, unidades
+FROM d_produto, d_tempo, reposicao
+WHERE cean = ean AND
+extract(day FROM instante) = dia AND
+extract(month FROM instante) = mes AND
+extract(year FROM instante) = ano;
